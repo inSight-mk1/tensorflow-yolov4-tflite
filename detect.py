@@ -56,9 +56,9 @@ def main(_argv):
         interpreter.invoke()
         pred = [interpreter.get_tensor(output_details[i]['index']) for i in range(len(output_details))]
         if FLAGS.model == 'yolov4' and FLAGS.tiny == True:
-            boxes, pred_conf = filter_boxes(pred[1], pred[0], score_threshold=0.25)
+            boxes, pred_conf = filter_boxes(pred[1], pred[0], score_threshold=0.25, input_shape=(input_size, input_size))
         else:
-            boxes, pred_conf = filter_boxes(pred[0], pred[1], score_threshold=0.25)
+            boxes, pred_conf = filter_boxes(pred[0], pred[1], score_threshold=0.25, input_shape=(input_size, input_size))
     else:
         saved_model_loaded = tf.saved_model.load(FLAGS.weights, tags=[tag_constants.SERVING])
         infer = saved_model_loaded.signatures['serving_default']
@@ -78,6 +78,7 @@ def main(_argv):
         score_threshold=FLAGS.score
     )
     pred_bbox = [boxes.numpy(), scores.numpy(), classes.numpy(), valid_detections.numpy()]
+    print('bbox', pred_bbox)
     image = utils.draw_bbox(original_image, pred_bbox)
     # image = utils.draw_bbox(image_data*255, pred_bbox)
     image = Image.fromarray(image.astype(np.uint8))
