@@ -21,7 +21,8 @@ flags.DEFINE_boolean('tiny', False, 'yolo or yolo-tiny')
 flags.DEFINE_string('model', 'yolov4', 'yolov3 or yolov4')
 flags.DEFINE_string('image', './data/kite.jpg', 'path to input image')
 flags.DEFINE_string('output', 'result.png', 'path to output image')
-flags.DEFINE_float('iou', 0.45, 'iou threshold')
+# flags.DEFINE_float('iou', 0.45, 'iou threshold')
+flags.DEFINE_float('iou', 1.0, 'iou threshold')
 flags.DEFINE_float('score', 0.25, 'score threshold')
 
 def main(_argv):
@@ -55,6 +56,7 @@ def main(_argv):
         interpreter.set_tensor(input_details[0]['index'], images_data)
         interpreter.invoke()
         pred = [interpreter.get_tensor(output_details[i]['index']) for i in range(len(output_details))]
+        print('pred', tf.shape(pred[0]), tf.shape(pred[1]))
         if FLAGS.model == 'yolov4' and FLAGS.tiny == True:
             boxes, pred_conf = filter_boxes(pred[1], pred[0], score_threshold=0.25, input_shape=(input_size, input_size))
         else:
@@ -78,7 +80,7 @@ def main(_argv):
         score_threshold=FLAGS.score
     )
     pred_bbox = [boxes.numpy(), scores.numpy(), classes.numpy(), valid_detections.numpy()]
-    print('bbox', pred_bbox)
+    # print('bbox', pred_bbox)
     image = utils.draw_bbox(original_image, pred_bbox)
     # image = utils.draw_bbox(image_data*255, pred_bbox)
     image = Image.fromarray(image.astype(np.uint8))

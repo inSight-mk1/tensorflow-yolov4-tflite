@@ -44,7 +44,8 @@ If you want to run yolov3 or yolov3-tiny change ``--model yolov3`` in command
 ```bash
 # Save tf model for tflite converting
 python save_model.py --weights ./data/yolov4.weights --output ./checkpoints/yolov4-416 --input_size 416 --model yolov4 --framework tflite 
-python save_model.py --weights "C:\Users\admin\dongwei\workspace\dataset\defect_detection\backup\yolov4-defect_0702_uav.weights"  --output ./checkpoints/yolov4-416 --input_size 416 --model yolov4 --framework tflite
+python save_model.py --weights "C:\Users\admin\dongwei\workspace\dataset\defect_detection\backup\yolov4-defect_0702_uav.weights"  --output ./checkpoints/yolov4-608 --input_size 608 --model yolov4 --framework tf
+python save_model.py --weights "C:\Users\admin\dongwei\workspace\dataset\defect_detection\backup\yolov4-tiny-3l-defect_0721.weights"  --output ./checkpoints/yolov4-tiny-960 --input_size 960 --model yolov4 --tiny --framework tflite
 
 # yolov4
 python convert_tflite.py --weights ./checkpoints/yolov4-416 --output ./checkpoints/yolov4-416.tflite
@@ -55,10 +56,12 @@ python convert_tflite.py --weights ./checkpoints/yolov4-416 --output ./checkpoin
 
 # yolov4 quantize int8
 python convert_tflite.py --weights ./checkpoints/yolov4-416 --output ./checkpoints/yolov4-416-int8.tflite --quantize_mode int8 --dataset ./coco_dataset/coco/val207.txt
+python convert_tflite.py --weights ./checkpoints/yolov4-608 --output ./checkpoints/yolov4-608-int8.tflite --quantize_mode int8
 
 # Run demo tflite model
 python detect.py --weights ./checkpoints/yolov4-416.tflite --size 416 --model yolov4 --image ./data/kite.jpg --framework tflite
 python detect.py --weights ./checkpoints/yolov4-608.tflite --size 608 --model yolov4 --image "D:\data\UAV\0619\DJI_0003.JPG" --framework tflite
+python detect.py --weights ./checkpoints/yolov4-608 --size 608 --model yolov4 --image "D:\data\UAV\0619\DJI_0003.JPG" --framework tf
 ```
 Yolov4 and Yolov4-tiny int8 quantization have some issues. I will try to fix that. You can try Yolov3 and Yolov3-tiny int8 quantization 
 ### Convert to TensorRT
